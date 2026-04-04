@@ -86,12 +86,21 @@ if uploaded_files:
                     raws = parse_file(tmp_path, bank_hint=bank)
 
                     if not raws:
-                        errors.append(f"⚠️ {uploaded.name}: nenhuma transação extraída.")
+                        # Tenta mostrar prévia do arquivo para diagnóstico
+                        try:
+                            preview = tmp_path.read_text(encoding="utf-8", errors="ignore")[:300]
+                        except Exception:
+                            preview = "(não foi possível ler o arquivo)"
+                        errors.append(
+                            f"⚠️ **{uploaded.name}** — banco detectado: `{bank}` — "
+                            f"nenhuma transação extraída.\n\n"
+                            f"Primeiras linhas do arquivo:\n```\n{preview}\n```"
+                        )
                         continue
 
                     transactions = normalize_all(raws)
                     if not transactions:
-                        errors.append(f"⚠️ {uploaded.name}: transações inválidas após normalização.")
+                        errors.append(f"⚠️ {uploaded.name}: transações encontradas ({len(raws)}) mas datas/valores inválidos.")
                         continue
 
                     # Categorização
@@ -125,7 +134,7 @@ if uploaded_files:
 
             if errors:
                 for err in errors:
-                    st.warning(err)
+                    st.warning(err, icon="⚠️")
 
             if statements:
                 profile = build_profile(statements)
