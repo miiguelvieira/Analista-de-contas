@@ -16,9 +16,9 @@ from leitor.utils.config import (
 )
 
 
-def _normalize_text(text: str) -> str:
+def _normalize_text(text) -> str:
     """Remove acentos e coloca em minúsculas para comparação."""
-    nfkd = unicodedata.normalize("NFKD", text)
+    nfkd = unicodedata.normalize("NFKD", str(text))
     ascii_str = nfkd.encode("ascii", "ignore").decode("ascii")
     return ascii_str.lower()
 

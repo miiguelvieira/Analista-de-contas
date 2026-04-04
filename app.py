@@ -56,7 +56,7 @@ with st.sidebar:
         help="Requer ANTHROPIC_API_KEY no arquivo .env",
     )
 
-    projection_note = st.empty()
+    debug_mode = st.toggle("🔍 Modo debug (mostra texto extraído)", value=False)
 
     if not uploaded_files:
         st.info("Faça upload de pelo menos um extrato bancário para começar.")
@@ -83,6 +83,20 @@ if uploaded_files:
                         tmp_path = Path(tmp.name)
 
                     bank = detect_bank(tmp_path)
+
+                    # Debug: mostra texto extraído pelo pdfplumber antes de parsear
+                    if debug_mode and tmp_path.suffix.lower() == ".pdf":
+                        try:
+                            import pdfplumber
+                            with pdfplumber.open(tmp_path) as pdf:
+                                sample_text = ""
+                                for pg in pdf.pages[:2]:
+                                    sample_text += pg.extract_text() or ""
+                                    sample_text += "\n---página---\n"
+                            st.info(f"**{uploaded.name}** — texto extraído (primeiros 1500 chars):\n```\n{sample_text[:1500]}\n```")
+                        except Exception as e:
+                            st.warning(f"Não foi possível ler o PDF para debug: {e}")
+
                     raws = parse_file(tmp_path, bank_hint=bank)
 
                     if not raws:

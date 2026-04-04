@@ -79,8 +79,8 @@ class Learner:
         """Aplica regras do usuário a uma transação. Modifica in-place."""
         import unicodedata
 
-        def norm(s: str) -> str:
-            nfkd = unicodedata.normalize("NFKD", s)
+        def norm(s) -> str:
+            nfkd = unicodedata.normalize("NFKD", str(s))
             return nfkd.encode("ascii", "ignore").decode("ascii").lower()
 
         for rule in self._rules:
@@ -108,8 +108,8 @@ class Learner:
         """Recategoriza todas as transações impactadas por uma nova regra."""
         import unicodedata
 
-        def norm(s: str) -> str:
-            nfkd = unicodedata.normalize("NFKD", s)
+        def norm(s) -> str:
+            nfkd = unicodedata.normalize("NFKD", str(s))
             return nfkd.encode("ascii", "ignore").decode("ascii").lower()
 
         affected = []
