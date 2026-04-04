@@ -63,19 +63,5 @@ class ItauParser(AbstractParser):
         return results
 
     def _parse_pdf(self, path: Path) -> list[TransactionRaw]:
-        from leitor.parsers.banks.bradesco import _extract_from_table, _extract_from_text_lines
-        try:
-            import pdfplumber
-        except ImportError:
-            raise ImportError("Instale 'pdfplumber': pip install pdfplumber")
-
-        results = []
-        with pdfplumber.open(path) as pdf:
-            for page in pdf.pages:
-                tables = page.extract_tables()
-                for table in tables:
-                    results.extend(_extract_from_table(table, "itau", str(path)))
-                if not tables:
-                    text = page.extract_text() or ""
-                    results.extend(_extract_from_text_lines(text, "itau", str(path)))
-        return results
+        from leitor.parsers.pdf_extractor import extract_pdf
+        return extract_pdf(path, "itau")
