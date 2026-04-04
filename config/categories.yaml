@@ -1,0 +1,359 @@
+alimentacao:
+  keywords:
+    - ifood
+    - rappi
+    - uber eats
+    - restaurant
+    - restaurante
+    - lanchonete
+    - padaria
+    - supermercado
+    - mercado
+    - hortifruti
+    - carrefour
+    - extra
+    - pao de acucar
+    - atacadao
+    - assai
+    - makro
+    - mc donalds
+    - mcdonalds
+    - burger
+    - pizza
+    - sushi
+    - acougue
+    - sacolao
+    - mercearia
+    - emporio
+    - delicatessen
+    - cafe
+    - confeitaria
+    - doceria
+    - sorvete
+    - sorveteria
+    - churrascaria
+    - boteco
+    - bar
+    - bistrô
+    - bistro
+    - loja de conveniencia
+    - am pm
+    - posto alimentacao
+  subcategory: geral
+
+transporte:
+  keywords:
+    - uber
+    - 99
+    - taxi
+    - cabify
+    - buser
+    - rodoviaria
+    - passagem
+    - onibus
+    - metro
+    - bilhete
+    - sptrans
+    - metrô
+    - trem
+    - cptm
+    - combustivel
+    - gasolina
+    - etanol
+    - alcool
+    - diesel
+    - posto shell
+    - posto ipiranga
+    - posto br
+    - posto raizen
+    - estacionamento
+    - parking
+    - autolavagem
+    - lavagem
+    - mecanica
+    - oficina
+    - troca de oleo
+    - ipva
+    - dpvat
+    - detran
+    - multa transito
+    - pedagio
+    - sem parar
+    - veloe
+    - autopass
+    - latam
+    - gol
+    - azul
+    - tam
+    - avianca
+    - voepass
+    - aeroporto
+    - alugar carro
+    - localiza
+    - movida
+    - unidas
+  subcategory: geral
+
+saude:
+  keywords:
+    - farmacia
+    - drogaria
+    - droga
+    - ultrafarma
+    - drogasil
+    - raia
+    - pacheco
+    - pague menos
+    - nissei
+    - consulta
+    - clinica
+    - medico
+    - medica
+    - hospital
+    - laboratorio
+    - exame
+    - plano de saude
+    - amil
+    - sulamerica saude
+    - bradesco saude
+    - unimed
+    - hapvida
+    - notredame
+    - intermédica
+    - odontologia
+    - dentista
+    - otica
+    - oculos
+    - academia
+    - gympass
+    - totalpass
+    - fisioterapia
+    - psicologo
+    - psiquiatra
+    - nutricionista
+    - veterinario
+    - petshop
+    - pet shop
+    - vacina
+  subcategory: geral
+
+lazer:
+  keywords:
+    - netflix
+    - spotify
+    - amazon prime
+    - disney
+    - hbo
+    - apple tv
+    - globoplay
+    - paramount
+    - crunchyroll
+    - youtube premium
+    - cinema
+    - ingresso
+    - teatro
+    - show
+    - evento
+    - ticket
+    - sympla
+    - eventbrite
+    - parque
+    - museu
+    - jogo
+    - steam
+    - playstation
+    - xbox
+    - nintendo
+    - livro
+    - livraria
+    - cultura
+    - saraiva
+    - amazon livro
+    - kindle
+    - audible
+    - viagem
+    - hotel
+    - hostel
+    - airbnb
+    - booking
+    - trivago
+    - turismo
+    - passeio
+    - praia
+    - esporte
+    - campo
+    - piscina
+    - sorte
+    - loteria
+  subcategory: geral
+
+moradia:
+  keywords:
+    - aluguel
+    - condominio
+    - condomínio
+    - energia eletrica
+    - luz
+    - celpe
+    - cemig
+    - copel
+    - energisa
+    - coelba
+    - enel
+    - agua
+    - saneamento
+    - sabesp
+    - compesa
+    - sanepar
+    - gas
+    - comgas
+    - gas natural
+    - internet
+    - claro
+    - vivo
+    - tim
+    - oi
+    - sky
+    - net
+    - telefone
+    - iptu
+    - seguro imovel
+    - manutencao
+    - reforma
+    - pintura
+    - eletricista
+    - encanador
+    - dedetizacao
+    - porteiro
+    - limpeza
+    - faxina
+    - supergasbras
+    - ultragaz
+    - liquigas
+  subcategory: geral
+
+educacao:
+  keywords:
+    - escola
+    - colegio
+    - faculdade
+    - universidade
+    - mensalidade escolar
+    - curso
+    - cursinho
+    - ingles
+    - idioma
+    - alura
+    - coursera
+    - udemy
+    - udacity
+    - duolingo
+    - material escolar
+    - livro didatico
+    - apostila
+    - uniforme
+    - creche
+    - bercario
+    - pós graduação
+    - pos graduacao
+    - mba
+    - certificacao
+    - concurso
+  subcategory: geral
+
+salario:
+  keywords:
+    - salario
+    - salário
+    - pagamento
+    - remuneracao
+    - remuneração
+    - holerite
+    - folha
+    - transferencia recebida
+    - pix recebido
+    - credito em conta
+    - deposito
+    - deposito em conta
+    - pro labore
+    - pró-labore
+    - honorarios
+    - honorários
+    - freelance
+    - prestacao servico
+    - prestação serviço
+  subcategory: geral
+
+investimentos:
+  keywords:
+    - cdb
+    - tesouro
+    - tesouro direto
+    - lci
+    - lca
+    - fii
+    - fundo imobiliario
+    - acao
+    - ações
+    - b3
+    - xp investimentos
+    - clear
+    - modalmais
+    - rico
+    - inter invest
+    - nuinvest
+    - aplicacao
+    - aplicação
+    - resgate
+    - rendimento
+    - dividendo
+    - jcp
+    - fundo
+    - coe
+    - debenture
+    - debenture
+    - poupanca
+    - poupança
+    - previdencia
+    - previdência
+    - pgbl
+    - vgbl
+    - bitcoin
+    - cripto
+    - crypto
+    - binance
+    - foxbit
+  subcategory: geral
+
+impostos:
+  keywords:
+    - imposto
+    - irpf
+    - irpj
+    - cofins
+    - pis
+    - iss
+    - inss
+    - fgts
+    - darf
+    - guia
+    - tributo
+    - taxa
+    - contribuicao
+    - contribuição
+    - receita federal
+    - prefeitura
+    - estado
+    - governo
+  subcategory: geral
+
+transferencias:
+  keywords:
+    - ted
+    - doc
+    - pix enviado
+    - transferencia
+    - transferência
+    - remessa
+    - tev
+  subcategory: geral

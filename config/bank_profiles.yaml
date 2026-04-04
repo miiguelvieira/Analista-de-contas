@@ -1,0 +1,156 @@
+nubank:
+  formats:
+    - csv
+  csv:
+    date_col: Data
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%Y-%m-%d"
+    encoding: utf-8
+    separator: ","
+    # Nubank: negative = expense (debit), positive = income (credit)
+    amount_sign: natural
+
+bradesco:
+  formats:
+    - pdf
+    - csv
+  csv:
+    date_col: Data
+    description_col: Histórico
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: latin-1
+    separator: ";"
+  pdf:
+    table_header_keywords:
+      - "Histórico"
+      - "Data"
+      - "Valor"
+    date_format: "%d/%m/%Y"
+
+itau:
+  formats:
+    - csv
+    - pdf
+  csv:
+    date_col: Data
+    description_col: Lançamento
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: latin-1
+    separator: ";"
+  pdf:
+    table_header_keywords:
+      - "Lançamento"
+      - "Data"
+      - "Valor (R$)"
+    date_format: "%d/%m/%Y"
+
+bb:
+  formats:
+    - csv
+    - pdf
+  csv:
+    date_col: Data
+    description_col: Histórico
+    amount_col: Valor (R$)
+    date_format: "%d/%m/%Y"
+    encoding: latin-1
+    separator: ";"
+  pdf:
+    table_header_keywords:
+      - "Dependência Origem"
+      - "Data"
+      - "Valor"
+    date_format: "%d/%m/%Y"
+
+santander:
+  formats:
+    - csv
+    - pdf
+    - ofx
+  csv:
+    date_col: Data
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: latin-1
+    separator: ";"
+  pdf:
+    table_header_keywords:
+      - "Descrição"
+      - "Data"
+      - "Valor"
+    date_format: "%d/%m/%Y"
+
+caixa:
+  formats:
+    - csv
+    - pdf
+    - ofx
+  csv:
+    date_col: Data
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: latin-1
+    separator: ";"
+  pdf:
+    table_header_keywords:
+      - "Histórico"
+      - "Data"
+      - "Valor"
+    date_format: "%d/%m/%Y"
+
+inter:
+  formats:
+    - csv
+    - pdf
+  csv:
+    date_col: Data
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: utf-8
+    separator: ";"
+
+c6bank:
+  formats:
+    - csv
+  csv:
+    date_col: Data da Transação
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%Y-%m-%d"
+    encoding: utf-8
+    separator: ","
+    amount_sign: natural
+
+picpay:
+  formats:
+    - csv
+  csv:
+    date_col: Data
+    description_col: Descrição
+    amount_col: Valor
+    date_format: "%d/%m/%Y"
+    encoding: utf-8
+    separator: ","
+
+generic:
+  formats:
+    - csv
+    - ofx
+  csv:
+    # Heuristic: try to detect columns automatically
+    auto_detect: true
+    date_format_candidates:
+      - "%d/%m/%Y"
+      - "%Y-%m-%d"
+      - "%d-%m-%Y"
+      - "%d/%m/%y"
+    encoding_candidates:
+      - utf-8
+      - latin-1
+      - cp1252
