@@ -105,9 +105,10 @@ def cashflow_chart(
         hovermode="x unified",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        separators=",.",
     )
-    fig.update_yaxes(title_text="Valor (R$)", secondary_y=False)
-    fig.update_yaxes(title_text="Saldo acumulado (R$)", secondary_y=True)
+    fig.update_yaxes(title_text="Valor (R$)", tickprefix="R$ ", tickformat=",.2f", secondary_y=False)
+    fig.update_yaxes(title_text="Saldo acumulado (R$)", tickprefix="R$ ", tickformat=",.2f", secondary_y=True)
     return fig
 
 
@@ -131,8 +132,10 @@ def income_vs_expense_chart(transactions: list[Transaction]) -> go.Figure:
         barmode="group",
         xaxis_title="Mês",
         yaxis_title="Valor (R$)",
+        yaxis=dict(tickprefix="R$ ", tickformat=",.2f"),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        separators=",.",
     )
     return fig
 
@@ -329,9 +332,11 @@ def patrimony_evolution_chart(
         title="Evolução Patrimonial e Projeção",
         xaxis_title="Mês",
         yaxis_title="Saldo Acumulado (R$)",
+        yaxis=dict(tickprefix="R$ ", tickformat=",.2f"),
         hovermode="x unified",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        separators=",.",
     )
     return fig
 
@@ -403,8 +408,10 @@ def bank_contribution_chart(transactions: list[Transaction]) -> go.Figure:
         barmode="stack",
         xaxis_title="Mês",
         yaxis_title="Valor (R$)",
+        yaxis=dict(tickprefix="R$ ", tickformat=",.2f"),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        separators=",.",
     )
     return fig
 
@@ -433,6 +440,8 @@ def monthly_category_chart(transactions: list[Transaction]) -> go.Figure:
 
     fig.update_layout(
         title="Gastos Mensais por Categoria",
+        yaxis=dict(tickprefix="R$ ", tickformat=",.2f"),
+        separators=",.",
         barmode="stack",
         xaxis_title="Mês",
         yaxis_title="Valor (R$)",

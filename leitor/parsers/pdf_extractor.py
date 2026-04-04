@@ -269,7 +269,7 @@ def _parse_line(line: str, bank: str, source: str) -> TransactionRaw | None:
     )
 
 
-# ─── Função principal: tenta as 3 estratégias ────────────────────────────────
+# ─── Função principal: tenta 4 estratégias em cascata ───────────────────────
 
 def extract_pdf(path: Path, bank: str) -> list[TransactionRaw]:
     try:
@@ -287,18 +287,31 @@ def extract_pdf(path: Path, bank: str) -> list[TransactionRaw]:
             if len(results) >= 3:
                 return results
 
-            # Estratégia 2: palavras com coordenadas
+            # Estratégia 2: palavras com coordenadas (bom para HTML→PDF como Nubank)
             results2 = extract_from_words(pages, bank, source)
             if len(results2) > len(results):
                 results = results2
             if len(results) >= 3:
                 return results
 
-            # Estratégia 3: texto puro
+            # Estratégia 3: texto puro com regex
             results3 = extract_from_text(pages, bank, source)
             if len(results3) > len(results):
                 results = results3
+            if len(results) >= 3:
+                return results
 
-            return results
     except Exception as e:
         raise RuntimeError(f"Erro ao abrir PDF: {e}")
+
+    # Estratégia 4: Agente Claude (fallback inteligente — funciona com qualquer layout)
+    # Ativado quando as estratégias anteriores encontram < 3 transações
+    try:
+        from leitor.parsers.claude_pdf_parser import extract_with_claude
+        claude_results = extract_with_claude(path, bank)
+        if len(claude_results) > len(results):
+            return claude_results
+    except Exception:
+        pass
+
+    return results

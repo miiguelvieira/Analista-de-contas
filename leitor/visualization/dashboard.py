@@ -13,10 +13,6 @@ from leitor.utils.currency import format_brl
 from leitor.visualization import charts
 
 
-def _kpi(label: str, value: str, delta: str | None = None, color: str = "normal"):
-    st.metric(label=label, value=value, delta=delta)
-
-
 # ─── ABA 1: VISÃO GERAL ──────────────────────────────────────────────────────
 
 def tab_overview(profile: FinancialProfile):
@@ -45,11 +41,13 @@ def tab_overview(profile: FinancialProfile):
     st.plotly_chart(
         charts.cashflow_chart(profile.all_transactions, granularity),
         use_container_width=True,
+        key="chart_cashflow",
     )
 
     st.plotly_chart(
         charts.income_vs_expense_chart(profile.all_transactions),
         use_container_width=True,
+        key="chart_income_expense",
     )
 
 
@@ -60,11 +58,23 @@ def tab_expenses(profile: FinancialProfile, learner=None):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(charts.expense_donut_chart(profile.all_transactions), use_container_width=True)
+        st.plotly_chart(
+            charts.expense_donut_chart(profile.all_transactions),
+            use_container_width=True,
+            key="chart_donut",
+        )
     with col2:
-        st.plotly_chart(charts.expense_sunburst_chart(profile.all_transactions), use_container_width=True)
+        st.plotly_chart(
+            charts.expense_sunburst_chart(profile.all_transactions),
+            use_container_width=True,
+            key="chart_sunburst",
+        )
 
-    st.plotly_chart(charts.monthly_category_chart(profile.all_transactions), use_container_width=True)
+    st.plotly_chart(
+        charts.monthly_category_chart(profile.all_transactions),
+        use_container_width=True,
+        key="chart_monthly_cat",
+    )
 
     st.divider()
     st.subheader("Transações")
@@ -88,7 +98,7 @@ def _transactions_table(profile: FinancialProfile, learner=None):
         "transferencias", "outros",
     ]
 
-    search = st.text_input("Buscar transação", placeholder="Nome, banco, categoria...")
+    search = st.text_input("Buscar transação", placeholder="Nome, banco, categoria...", key="txn_search")
 
     rows = [
         {
@@ -96,7 +106,7 @@ def _transactions_table(profile: FinancialProfile, learner=None):
             "Data": t.date.strftime("%d/%m/%Y"),
             "Banco": t.bank.capitalize(),
             "Descrição": t.description,
-            "Valor (R$)": float(t.amount),
+            "Valor (R$)": format_brl(t.amount),
             "Categoria": t.category,
             "Fonte": t.categorization_source,
         }
@@ -112,6 +122,7 @@ def _transactions_table(profile: FinancialProfile, learner=None):
         df.drop(columns=["ID"]),
         use_container_width=True,
         height=350,
+        key="txn_dataframe",
     )
 
     if learner:
@@ -175,7 +186,6 @@ def _user_rules_editor(learner, profile: FinancialProfile):
         col2.markdown(f'<small>Fonte: {mtype}</small>', unsafe_allow_html=True)
         if col3.button("🗑️", key=f"del_rule_{i}"):
             learner.remove_rule(i)
-            # Recategoriza as transações afetadas removendo a regra
             st.success("Regra removida.")
             st.rerun()
 
@@ -189,7 +199,11 @@ def tab_score(profile: FinancialProfile):
 
     col1, col2 = st.columns([1, 1])
     with col1:
-        st.plotly_chart(charts.credit_score_gauge(score), use_container_width=True)
+        st.plotly_chart(
+            charts.credit_score_gauge(score),
+            use_container_width=True,
+            key="chart_score_gauge",
+        )
         band_label, band_color = get_band(score)
         st.markdown(
             f"<h3 style='color:{band_color};text-align:center'>{band_label}</h3>",
@@ -198,7 +212,11 @@ def tab_score(profile: FinancialProfile):
 
     with col2:
         if pillars:
-            st.plotly_chart(charts.score_radar_chart(pillars), use_container_width=True)
+            st.plotly_chart(
+                charts.score_radar_chart(pillars),
+                use_container_width=True,
+                key="chart_score_radar",
+            )
 
     if pillars:
         st.subheader("Detalhamento dos Pilares")
@@ -248,7 +266,6 @@ def tab_score(profile: FinancialProfile):
             f"parcela estimada de **{format_brl(Decimal(str(round(custom_pmt, 2))))}**"
         )
 
-    # Tabela de sensibilidade
     if loan.get("sensitivity"):
         st.subheader("Tabela de Sensibilidade — Parcela (R$)")
         terms = loan["terms"]
@@ -272,10 +289,15 @@ def tab_trends(profile: FinancialProfile):
     st.plotly_chart(
         charts.patrimony_evolution_chart(profile, projection_months),
         use_container_width=True,
+        key="chart_patrimony",
     )
 
     st.subheader("Taxa de Poupança por Mês")
-    st.plotly_chart(charts.savings_heatmap(profile), use_container_width=True)
+    st.plotly_chart(
+        charts.savings_heatmap(profile),
+        use_container_width=True,
+        key="chart_savings_heatmap",
+    )
 
 
 # ─── ABA 5: BANCOS ───────────────────────────────────────────────────────────
@@ -285,6 +307,7 @@ def tab_banks(profile: FinancialProfile):
     st.plotly_chart(
         charts.bank_contribution_chart(profile.all_transactions),
         use_container_width=True,
+        key="chart_bank_contrib",
     )
 
     st.subheader("Resumo por Banco")
@@ -310,7 +333,6 @@ def tab_banks(profile: FinancialProfile):
     ]
     st.dataframe(pd.DataFrame(rows), use_container_width=True)
 
-    # Extrato bruto por banco
     st.subheader("Extrato Bruto por Banco")
     selected_bank = st.selectbox("Selecione o banco", options=list(bank_summary.keys()),
                                   format_func=str.capitalize, key="raw_bank")
