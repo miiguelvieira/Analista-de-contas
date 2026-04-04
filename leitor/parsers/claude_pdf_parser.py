@@ -14,11 +14,11 @@ from __future__ import annotations
 
 import json
 import re
+from collections import defaultdict
 from pathlib import Path
 
 from leitor.parsers.base import TransactionRaw
 from leitor.utils.config import ANTHROPIC_API_KEY
-from leitor.utils.currency import parse_brl
 from leitor.utils.date_utils import parse_date
 
 SYSTEM_PROMPT = """Você é um especialista em extratos bancários brasileiros.
@@ -58,7 +58,6 @@ def _extract_pdf_text(path: Path) -> list[str]:
                 words = page.extract_words()
                 if words:
                     # Reconstrói texto agrupando palavras por linha (Y)
-                    from collections import defaultdict
                     by_y: dict[float, list] = defaultdict(list)
                     for w in words:
                         y_key = round(w["top"] / 5) * 5  # agrupa por faixa de 5pt
@@ -88,18 +87,8 @@ def _chunk_pages(pages: list[str], max_chars: int = 6000) -> list[str]:
     return chunks
 
 
-def _call_claude(text_chunk: str, bank: str) -> list[dict]:
+def _call_claude(client, text_chunk: str, bank: str) -> list[dict]:
     """Chama o Claude API e retorna lista de dicts de transações."""
-    try:
-        import anthropic
-    except ImportError:
-        raise ImportError("Instale anthropic: pip install anthropic")
-
-    if not ANTHROPIC_API_KEY:
-        return []
-
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-
     user_message = (
         f"Banco: {bank.upper()}\n\n"
         f"Texto do extrato:\n\n{text_chunk}"
@@ -169,17 +158,23 @@ def extract_with_claude(path: Path, bank: str) -> list[TransactionRaw]:
     if not ANTHROPIC_API_KEY:
         return []
 
+    try:
+        import anthropic
+    except ImportError:
+        raise ImportError("Instale anthropic: pip install anthropic")
+
     pages = _extract_pdf_text(path)
     if not pages:
         return []
 
     chunks = _chunk_pages(pages)
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     all_results: list[TransactionRaw] = []
     seen_keys: set[str] = set()
 
     for chunk in chunks:
         try:
-            items = _call_claude(chunk, bank)
+            items = _call_claude(client, chunk, bank)
             for item in items:
                 raw = _dict_to_raw(item, bank, str(path))
                 if raw is None:

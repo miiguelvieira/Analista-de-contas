@@ -1,0 +1,93 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# config.yaml — Parâmetros centralizados do projeto Leitor de Conta / ML Pipeline
+# ─────────────────────────────────────────────────────────────────────────────
+# Todos os caminhos são relativos à raiz do projeto (onde este arquivo vive).
+# Use forward slashes — funciona em Windows, Linux e macOS.
+
+# ── Caminhos de dados ─────────────────────────────────────────────────────────
+paths:
+  # PDFs brutos a serem convertidos e processados
+  pdfs: data/pdfs
+
+  # Imagens PNG geradas pelo pdf_to_png.py (entrada do pipeline de anotação)
+  images: data/images
+
+  # Anotações manuais exportadas (formato COCO JSON ou arquivos por imagem)
+  annotations: data/annotations
+
+  # Splits de dataset prontos para treinamento
+  train: data/splits/train
+  val:   data/splits/val
+  test:  data/splits/test
+
+  # Checkpoints e artefatos de treinamento
+  checkpoints: data/checkpoints
+
+  # Logs do treinamento (TensorBoard / CSV)
+  logs: data/logs
+
+  # Predições geradas pelo modelo em inferência
+  predictions: data/predictions
+
+# ── Conversão PDF → PNG ───────────────────────────────────────────────────────
+pdf_conversion:
+  dpi: 300                  # Resolução de saída (300 DPI padrão para anotação ML)
+  format: png               # "png" ou "jpeg"
+  workers: 4                # Threads paralelas (ajuste conforme CPU disponível)
+
+# ── Modelo pré-treinado ───────────────────────────────────────────────────────
+model:
+  name: microsoft/layoutlmv3-base   # HuggingFace Hub ID ou caminho local
+  # name: microsoft/layoutlmv3-large  # Alternativa maior (mais lenta, mais precisa)
+  # name: ./data/checkpoints/meu_modelo  # Checkpoint local fine-tuned
+
+  # Número máximo de tokens por sequência (LayoutLMv3: máximo é 512)
+  max_seq_length: 512
+
+  # Número de classes de saída (ajuste conforme seu conjunto de rótulos)
+  num_labels: 5
+
+  # Rótulos das classes (ordem importa — índice 0 = primeiro label)
+  label_names:
+    - O              # Outside (BIO scheme)
+    - B-DATE         # Início de data
+    - B-AMOUNT       # Início de valor monetário
+    - B-DESCRIPTION  # Início de descrição de transação
+    - B-BALANCE      # Início de saldo
+
+# ── Hiperparâmetros de treinamento ────────────────────────────────────────────
+training:
+  batch_size: 4           # Reduzir se ocorrer OOM (out of memory)
+  eval_batch_size: 8      # Pode ser maior que batch_size (sem gradientes)
+  learning_rate: 5.0e-5   # Taxa de aprendizado inicial (AdamW)
+  num_epochs: 10          # Número de épocas de treinamento
+  warmup_ratio: 0.1       # Fração das steps usadas para warmup linear do LR
+  weight_decay: 0.01      # Regularização L2 do AdamW
+  gradient_clip: 1.0      # Clipping de gradiente (0 = desativado)
+  seed: 42                # Semente para reprodutibilidade
+
+  # Estratégia de avaliação e salvamento
+  eval_strategy: epoch    # "epoch" ou "steps"
+  save_strategy: epoch    # "epoch" ou "steps"
+  load_best_model_at_end: true
+  metric_for_best_model: f1
+
+  # Mixed precision (acelera treinamento em GPUs com suporte a FP16)
+  fp16: false             # Alterar para true em GPUs NVIDIA com suporte
+  bf16: false             # Alternativa ao fp16 (GPUs Ampere+)
+
+# ── Pré-processamento de imagens ──────────────────────────────────────────────
+image:
+  # Tamanho de entrada esperado pelo LayoutLMv3 (não alterar sem motivo)
+  size: [224, 224]
+  # Normalização ImageNet (usada pelo processador do LayoutLMv3)
+  mean: [0.485, 0.456, 0.406]
+  std:  [0.229, 0.224, 0.225]
+
+# ── Inferência ────────────────────────────────────────────────────────────────
+inference:
+  batch_size: 8
+  # Limiar de confiança mínima para aceitar uma predição
+  confidence_threshold: 0.80
+  # Exportar resultados como JSON estruturado
+  output_format: json     # "json" ou "csv"

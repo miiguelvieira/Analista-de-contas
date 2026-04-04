@@ -1,9 +1,10 @@
+# ── Streamlit app (leitor de conta) ──────────────────────────────────────────
 streamlit>=1.43.0
+plotly>=5.24.0
 pdfplumber>=0.11.4
 pandas>=2.2.3
 numpy>=2.2.0
-plotly>=5.24.0
-anthropic>=0.89.0
+anthropic>=0.49.0
 scikit-learn>=1.6.1
 ofxparse>=0.21
 openpyxl>=3.1.5
@@ -12,3 +13,24 @@ pyyaml>=6.0.2
 pydantic>=2.10.6
 click>=8.1.8
 rich>=13.9.4
+
+# ── ML pipeline (train_layoutlm / predict) ────────────────────────────────────
+torch>=2.2.0
+torchvision>=0.17.0
+transformers>=4.40.0
+datasets>=2.19.0
+torchmetrics[detection]>=1.3.0
+# albumentations>=1.4.0,<2.0.0  # opcional — requer C++ Build Tools no Windows
+#   Instale separado se quiser data augmentation:
+#   pip install albumentations<2.0.0 --no-deps && pip install imgaug
+scipy>=1.13.0
+
+# ── PDF → imagem (pdf_to_png / predict) ──────────────────────────────────────
+pdf2image>=1.17.0
+
+# ── OCR (predict) ─────────────────────────────────────────────────────────────
+pytesseract>=0.3.13
+pillow>=10.3.0
+
+# ── Anotação / conversão (convert_annotations) ───────────────────────────────
+tqdm>=4.66.0

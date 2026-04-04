@@ -24,6 +24,8 @@ AMOUNT_RE = re.compile(
     r"([-+]?\s*R?\$?\s*\d{1,3}(?:\.\d{3})*,\d{2})"
     r"(?!\d)"
 )
+# Valor simples sem separador de milhar: 123,45 ou 1234,56
+AMOUNT_SIMPLE_RE = re.compile(r"(?<![,\d])(\d{1,6},\d{2})(?!\d)")
 
 
 def _norm(text: str) -> str:
@@ -278,6 +280,7 @@ def extract_pdf(path: Path, bank: str) -> list[TransactionRaw]:
         raise ImportError("Instale 'pdfplumber': pip install pdfplumber")
 
     source = str(path)
+    results: list[TransactionRaw] = []
     try:
         with pdfplumber.open(path) as pdf:
             pages = pdf.pages
@@ -301,6 +304,8 @@ def extract_pdf(path: Path, bank: str) -> list[TransactionRaw]:
             if len(results) >= 3:
                 return results
 
+    except RuntimeError:
+        raise
     except Exception as e:
         raise RuntimeError(f"Erro ao abrir PDF: {e}")
 

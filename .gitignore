@@ -29,3 +29,10 @@ env/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Modelos e checkpoints grandes (não versionar)
+data/checkpoints/
+# Imagens geradas (reproduzíveis a partir dos PDFs)
+data/images/
+# Predições de inferência
+data/predictions/
