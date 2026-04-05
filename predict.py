@@ -131,6 +131,14 @@ def load_model(
 # 2. PDF → imagens
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def _find_poppler_path() -> str | None:
+    """Localiza o Poppler em data/poppler/ (bundled) ou retorna None."""
+    root = Path(__file__).parent
+    for candidate in (root / "data" / "poppler").rglob("pdftoppm.exe"):
+        return str(candidate.parent)
+    return None
+
+
 def pdf_to_images(pdf_path: Path, dpi: int = 300) -> list[Image.Image]:
     """Converte cada página do PDF em uma imagem PIL no DPI especificado."""
     try:
@@ -138,9 +146,10 @@ def pdf_to_images(pdf_path: Path, dpi: int = 300) -> list[Image.Image]:
     except ImportError:
         sys.exit("Erro: pdf2image não instalado. pip install pdf2image")
 
+    poppler_path = _find_poppler_path()
     log.info("Convertendo '%s' (%d DPI)...", pdf_path.name, dpi)
     try:
-        pages = convert_from_path(str(pdf_path), dpi=dpi)
+        pages = convert_from_path(str(pdf_path), dpi=dpi, poppler_path=poppler_path)
     except Exception as exc:
         raise RuntimeError(f"Falha ao converter PDF: {exc}") from exc
 
@@ -473,20 +482,20 @@ def process_page(
 # 8. Impressão no terminal
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def _separator(char: str = "─", width: int = 72) -> str:
+def _separator(char: str = "-", width: int = 72) -> str:
     return char * width
 
 
 def print_results(result: dict[str, Any]) -> None:
     """Imprime resultados formatados no terminal."""
-    print(_separator("═"))
+    print(_separator("="))
     print(f"  Arquivo : {result['pdf']}")
     print(f"  Páginas : {result['total_pages']}")
     s = result["summary"]
     print(f"  Total transações : {s['total_transaction_rows']}")
     print(f"  Transferências   : {s['total_transfers']}")
     print(f"  Intra-usuário    : {s['total_intra_user']}")
-    print(_separator("═"))
+    print(_separator("="))
 
     for page in result["pages"]:
         pn = page["page_number"]
@@ -508,9 +517,9 @@ def print_results(result: dict[str, Any]) -> None:
             text_str  = (det["ocr_text"] or "(sem OCR)")[:80]
 
             print(f"  score={score_str}  {tag}")
-            print(f"    └─ {text_str}")
+            print(f"    +- {text_str}")
 
-    print(_separator("═"))
+    print(_separator("="))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
