@@ -44,16 +44,16 @@ model:
   # Número máximo de tokens por sequência (LayoutLMv3: máximo é 512)
   max_seq_length: 512
 
-  # Número de classes de saída (ajuste conforme seu conjunto de rótulos)
+  # Número de classes de saída (background + 4 classes de layout)
   num_labels: 5
 
-  # Rótulos das classes (ordem importa — índice 0 = primeiro label)
+  # Rótulos das classes de detecção de layout (índice 0 = background)
   label_names:
-    - O              # Outside (BIO scheme)
-    - B-DATE         # Início de data
-    - B-AMOUNT       # Início de valor monetário
-    - B-DESCRIPTION  # Início de descrição de transação
-    - B-BALANCE      # Início de saldo
+    - background         # Sem classe (patches não atribuídos)
+    - header             # Cabeçalho do extrato
+    - transaction_row    # Linha de transação
+    - transfer_indicator # Indicador de TED/DOC/PIX
+    - saldo              # Região de saldo
 
 # ── Hiperparâmetros de treinamento ────────────────────────────────────────────
 training:

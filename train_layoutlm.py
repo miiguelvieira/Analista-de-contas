@@ -49,7 +49,7 @@ log = logging.getLogger(__name__)
 
 # ── Categorias (espelha convert_annotations.py) ───────────────────────────────
 
-CATEGORY_NAMES = ["background", "header", "transaction_row", "transfer_indicator"]
+CATEGORY_NAMES = ["background", "header", "transaction_row", "transfer_indicator", "saldo"]
 # índice 0 = background (não existe no COCO, inserido para o modelo ter classe "nada")
 # índices 1–3 mapeiam direto ao category_id do COCO (1, 2, 3)
 NUM_CLASSES = len(CATEGORY_NAMES)  # 4 (inclui background)
@@ -125,10 +125,12 @@ class BankStatementDataset(Dataset):
             h_orig, w_orig = image.shape[:2]
 
         # ── Processa com LayoutLMv3Processor (sem OCR) ────────────────────
+        # transformers>=5.x exige boxes explícito quando apply_ocr=False
         pil_image = Image.fromarray(image)
         encoding  = self.processor(
             images=pil_image,
-            text=" ",           # token dummy — evita OCR interno
+            text=["dummy"],              # uma palavra dummy
+            boxes=[[0, 0, 0, 0]],        # uma box dummy (coords em pixels 0-1000)
             return_tensors="pt",
             truncation=True,
             max_length=512,
@@ -747,13 +749,14 @@ def main() -> None:
     train_ds = BankStatementDataset(train_json, images_dir, processor, augment=not args.no_aug)
     val_ds   = BankStatementDataset(val_json,   images_dir, processor, augment=False)
 
+    # num_workers=0 evita problemas de pickle no Windows com Python 3.14+
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
-        num_workers=min(4, os.cpu_count() or 1), collate_fn=collate_fn, pin_memory=True,
+        num_workers=0, collate_fn=collate_fn, pin_memory=False,
     )
     val_loader = DataLoader(
         val_ds, batch_size=cfg["training"]["eval_batch_size"], shuffle=False,
-        num_workers=min(4, os.cpu_count() or 1), collate_fn=collate_fn, pin_memory=True,
+        num_workers=0, collate_fn=collate_fn, pin_memory=False,
     )
 
     # ── Modelo ────────────────────────────────────────────────────────────────

@@ -83,6 +83,7 @@ CLASS_COLORS: dict[str, tuple[int, int, int]] = {
     "header":             (52,  152, 219),   # azul
     "transaction_row":    (39,  174,  96),   # verde
     "transfer_indicator": (231,  76,  60),   # vermelho
+    "saldo":              (155,  89, 182),   # roxo
     "background":         (189, 195, 199),   # cinza
 }
 
@@ -171,7 +172,8 @@ def predict_page(
     # ── Pré-processamento (224×224 para o modelo) ─────────────────────────
     encoding = processor(
         images=image,
-        text=" ",
+        text=["dummy"],
+        boxes=[[0, 0, 0, 0]],
         return_tensors="pt",
         truncation=True,
         max_length=512,

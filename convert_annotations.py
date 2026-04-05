@@ -28,6 +28,7 @@ CATEGORIES: list[dict] = [
     {"id": 1, "name": "header",              "supercategory": "layout"},
     {"id": 2, "name": "transaction_row",     "supercategory": "layout"},
     {"id": 3, "name": "transfer_indicator",  "supercategory": "layout"},
+    {"id": 4, "name": "saldo",               "supercategory": "layout"},
 ]
 CATEGORY_NAME_TO_ID: dict[str, int] = {c["name"]: c["id"] for c in CATEGORIES}
 
